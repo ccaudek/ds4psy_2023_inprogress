@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Diagnostica delle catene markoviane &#8212; ds4psy</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Inferenza su una media" href="050_normal_normal_mod.html" />
+    <link rel="prev" title="Markov Chain Monte Carlo per l’inferenza bayesiana" href="040_beta_binomial.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">ds4psy</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Benvenuti
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Nozioni di base
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="preface.html">
+   Prefazione
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="001_key_notions.html">
+   Concetti chiave
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="005_measurement.html">
+   La misurazione in psicologia
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="007_freq_distr.html">
+   Analisi esplorativa dei dati
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="011_loc_scale.html">
+   Indici di posizione e di scala
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="012_correlation.html">
+   Le relazioni tra variabili
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="013_eda_quickstart.html">
+   Introduzione alla data analisi
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Probabilità
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="014_dice.html">
+   Calcolo combinatorio
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="015_intro_prob.html">
+   La logica dell’incerto
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="016_conditional_prob.html">
+   Probabilità condizionata: significato, teoremi, eventi indipendenti
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="017_bayes_theorem.html">
+   Il teorema di Bayes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="018_expval_var.html">
+   Indici di posizione, di varianza e di associazione di variabili casuali
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="019_joint_prob.html">
+   Probabilità congiunta
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="020_density_func.html">
+   La densità di probabilità
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Distribuzioni di v.c.
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="022_discr_rv_distr.html">
+   Distribuzioni di v.c. discrete
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="023_cont_rv_distr.html">
+   Distribuzioni di v.c. continue
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="024_likelihood.html">
+   La verosimiglianza
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferenza bayesiana
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="025_intro_bayes.html">
+   Credibilità, modelli e parametri
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="026_subj_prop.html">
+   Pensare ad una proporzione in termini soggettivi
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="029_conjugate_families.html">
+   Distribuzioni coniugate
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="030_balance_prior_post.html">
+   L’influenza della distribuzione a priori
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="036_metropolis.html">
+   Approssimazione della distribuzione a posteriori
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="040_beta_binomial.html">
+   Markov Chain Monte Carlo per l’inferenza bayesiana
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Diagnostica delle catene markoviane
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="050_normal_normal_mod.html">
+   Inferenza su una media
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Regressione lineare
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="051_reglin_1.html">
+   Introduzione
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="052_reglin_2.html">
+   Regressione lineare bivariata
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="053_reglin_3.html">
+   Regressione lineare con PyMC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="054_reglin_4.html">
+   Confronto tra le medie di due gruppi
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferenza frequentista
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="220_intro_frequentist.html">
+   Legge dei grandi numeri
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="221_conf_interv.html">
+   Intervallo fiduciale
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="226_test_ipotesi.html">
+   Significatività statistica
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="228_limiti_stat_frequentista.html">
+   Limiti dell’inferenza frequentista
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="230_s_m_errors.html">
+   Errori di tipo
+   <em>
+    m
+   </em>
+   (magnitude) e di tipo
+   <em>
+    s
+   </em>
+   (sign)
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Bibliografia
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="z_biblio.html">
+   Bibliografia
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Appendici
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a01_math_symbols.html">
+   Simbologia di base
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="a02_number_sets.html">
+   Numeri binari, interi, razionali, irrazionali e reali
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="a04_summation_notation.html">
+   Simbolo di somma (sommatorie)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="a05_calculus_notation.html">
+   Per liberarvi dai terrori preliminari
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/ccaudek/ds4psy_2023/master?urlpath=tree/docs/041_mcmc_diagnostics.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ccaudek/ds4psy_2023"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ccaudek/ds4psy_2023/issues/new?title=Issue%20on%20page%20%2F041_mcmc_diagnostics.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/041_mcmc_diagnostics.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#esame-dei-trace-plot">
+   Esame dei
+   <em>
+    trace plot
+   </em>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numerosita-campionaria-effettiva">
+   Numerosità campionaria effettiva
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autocorrelazione">
+   Autocorrelazione
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#statistica-hat-r">
+   Statistica
+   <span class="math notranslate nohighlight">
+    \(\hat{R}\)
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#diagnostica-di-convergenza-di-geweke">
+   Diagnostica di convergenza di Geweke
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Diagnostica delle catene markoviane</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#esame-dei-trace-plot">
+   Esame dei
+   <em>
+    trace plot
+   </em>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numerosita-campionaria-effettiva">
+   Numerosità campionaria effettiva
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autocorrelazione">
+   Autocorrelazione
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#statistica-hat-r">
+   Statistica
+   <span class="math notranslate nohighlight">
+    \(\hat{R}\)
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#diagnostica-di-convergenza-di-geweke">
+   Diagnostica di convergenza di Geweke
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="diagnostica-delle-catene-markoviane">
+<span id="sec-diagn-markov-chains"></span><h1>Diagnostica delle catene markoviane<a class="headerlink" href="#diagnostica-delle-catene-markoviane" title="Permalink to this headline">#</a></h1>
+<p>Le catene di Markov forniscono un’approssimazione che tende a convergere alla distribuzione a posteriori. “Approssimazione” e “convergenza” sono le parole chiave: il punto è che il campionamento MCMC non è perfetto. Questo solleva le seguenti domande:</p>
+<ul class="simple">
+<li><p>A cosa corrisponde, dal punto di vista grafico, una “buona” catena di Markov?</p></li>
+<li><p>Come possiamo sapere se il campione prodotto dalla catena di Markov costituisce un’approssimazione adeguata della distribuzione a posteriori?</p></li>
+<li><p>Quanto deve essere grande la dimensione del campione casuale prodotto dalla catena Markov?</p></li>
+</ul>
+<p>Rispondere a queste ed altre domande di questo tipo fa parte di quell’insieme di pratiche che vanno sotto il nome di <em>diagnostica delle catene Markoviane</em>.</p>
+<p>La diagnostica delle catene Markoviane non è “una scienza esatta”. Ovvero, non sono disponibili procedure che risultano valide in tutti i casi possibili e non sempre è possibile rispondere a tutte le precedenti domande. È piuttosto l’esperienza del ricercatore che consente di riconoscere una “buona” catena di Markov e a suggerire cosa si può fare per riparare una “cattiva” catena di Markov. In questo Capitolo ci concentreremo su alcuni strumenti diagnostici grafici e numerici che possono essere utilizzati per la diagnostica delle catene markoviane. L’utilizzo di questi strumenti diagnostici deve essere eseguito in modo olistico. Nessuna singola diagnostica visiva o numerica è sufficiente: un quadro completo della qualità della catena di Markov si può solo ottenere considerando tutti gli strumenti descritti di seguito.</p>
+<section id="esame-dei-trace-plot">
+<h2>Esame dei <em>trace plot</em><a class="headerlink" href="#esame-dei-trace-plot" title="Permalink to this headline">#</a></h2>
+<p>La convergenza e il “mixing” possono essere controllate mediante il <em>trace plot</em> che mostra l’andamento delle simulazioni e ci dice se stiamo effettivamente utilizzando una distribuzione limite. In generale, cerchiamo un grafico che mostri una dispersione casuale attorno a un valore medio: in tali circostanze i risultati del modello suggeriscono che le catene si mescolano bene e che le impostazioni della MCMC sono adeguate. Una mancanza di convergenza è invece indicata dalla figura seguente:</p>
+<p><img alt="" src="_images/bad_mixing.svg" /></p>
+<p>Le catene non convergono né si mescolano tra loro. Uno dei motivi per l’esecuzione di più catene è che ogni singola catena potrebbe convergere verso un target, mentre un’altra catena potrebbe convergere su un target diverso, e questo sarebbe un problema. Inoltre, catene altrimenti sane possono bloccarsi occasionalmente nel corso della serie, il che suggerirebbe la necessità di modifiche al modello o alle impostazioni del campionatore. Un altro modo per valutare la convergenza dell’algoritmo è plottando la
+densità della distribuzione a posteriori degli effetti stimati, assicurandoci
+che si avvicini ad una classica curva a campana.</p>
+<p>In pratica, non abbiamo mai il privilegio di poter confrontare i risultati del campionamento MCMC con la corretta distribuzione a posteriori. Ecco perché la diagnostica delle catene di Markov è così importante: se vediamo trace-plots come i precedenti, sappiamo che non abbiamo ottenuto una  approssimazione adeguata della distribuzione a posteriori. In tali circostanze possiamo ricorrere ad alcuni rimedi.</p>
+<ol class="simple">
+<li><p>Controllare il modello. Siamo sicuri che le distribuzioni a priori e la verosimiglianza siano appropriate per i dati osservati?</p></li>
+<li><p>Utilizzare un numero maggiore di iterazioni. Alcune tendenze indesiderate a breve termine della catena possono appianarsi nel lungo termine.</p></li>
+</ol>
+</section>
+<section id="numerosita-campionaria-effettiva">
+<h2>Numerosità campionaria effettiva<a class="headerlink" href="#numerosita-campionaria-effettiva" title="Permalink to this headline">#</a></h2>
+<p>Nel campionamento si ottengono <span class="math notranslate nohighlight">\(n\)</span> campioni <em>dipendenti</em> dei parametri <span class="math notranslate nohighlight">\(\theta\)</span>. Sapendo che l’errore dell’approssimazione alla distribuzione a posteriori è probabilmente più grande di quello che si otterrebbe usando <span class="math notranslate nohighlight">\(n\)</span> campioni <em>indipendenti</em>, ci possiamo chiedere: quanti campioni indipendenti sarebbero necessari per produrre un’approssimazione della distribuzione a posteriori equivalentemente a quella che abbiamo ottenuto? La numerosità campionaria effettiva (<em>effective sample size</em>, <span class="math notranslate nohighlight">\(N_{eff}\)</span>) fornisce una risposta a questa domanda.</p>
+<p>Tipicamente, <span class="math notranslate nohighlight">\(N_{eff} &lt; N\)</span>, per cui il rapporto campionario effettivo (<em>effective sample size ratio</em>) <span class="math notranslate nohighlight">\(\frac{N_{eff}}{N}\)</span> è minore di 1. Come regola euristica, viene considerato problematico un rapporto campionario effettivo minore del 10% del numero totale di campioni ottenuti nella simulazione (più basso è il rapporto campionario effettivo peggiore è il “mixing” della catena).</p>
+</section>
+<section id="autocorrelazione">
+<h2>Autocorrelazione<a class="headerlink" href="#autocorrelazione" title="Permalink to this headline">#</a></h2>
+<p>Normalmente un algoritmo MCMC genera catene di Markov di campioni ognuno dei quali è autocorrelato a quelli generati immediatamente prima e dopo di lui. Conseguentemente campioni successivi non sono indipendenti ma formano una catena di Markov con un certo grado di correlazione. Il valore <span class="math notranslate nohighlight">\(\theta^{(i)}\)</span> tende ad essere più simile al valore <span class="math notranslate nohighlight">\(\theta^{(i-1)}\)</span> che al valore <span class="math notranslate nohighlight">\(\theta^{(i-2)}\)</span>, o al valore <span class="math notranslate nohighlight">\(\theta^{(i-3)}\)</span>, eccetera. Una misura di questo è fornita dall’autocorrelazione tra i valori consecutivi della catena.</p>
+<p>Il correlogramma mostra l’autocorrelazione in funzione di ritardi da 0 a 20. L’autocorrelazione di lag 0 è naturalmente 1 – misura la correlazione tra un valore della catena di Markov e se stesso. Se l’autocorrelazione di lag 1 non è troppo grande, indicando una correlazione moderata tra i valori della catena che distano di solo 1 passo l’uno dall’altro, e, successivamente, diminuisce rapidamente, questo indica che la catena di Markov costituisce una buona approssimazione di un campione casuale di <span class="math notranslate nohighlight">\(p(\theta \mid y)\)</span>.</p>
+<p>Una (famiglia di) catene di Markov si dice <em>rapidly mixing</em> se mostra un comportamento simile a quello di un campione indipendente: i valori delle catene si addensano nell’intervallo dei valori più plausibili della distribuzione a posteriori; l’autocorrelazione tra i valori della catena diminuisce rapidamente; il rapporto campionario effettivo è ragionevolmente grande. Le catene che non sono <em>rapidly mixing</em> non godono delle caratteristiche di un campione indipendente: le catene non si addensano nell’intervallo dei valori più plausibili della distribuzione a posteriori; l’autocorrelazione tra i valori della catena diminuisce molto lentamente; il rapporto campionario effettivo è piccolo.</p>
+<p>In presenza di catene di Markov non <em>rapidly mixing</em> sono possibili due rimedi.</p>
+<ul class="simple">
+<li><p>Aumentare il numero di iterazioni. Anche una catena non <em>rapidly mixing</em> può produrre eventualmente una buona approssimazione della distribuzione a posteriori se il numero di iterazioni è sufficientemente grande.</p></li>
+<li><p><em>Thinning</em>. Per esempio, se la catena di Markov è costituita da 16000 valori di <span class="math notranslate nohighlight">\(\theta\)</span>, potremmo decidere di conservare solo ogni secondo valore e ignorare gli altri valori: <span class="math notranslate nohighlight">\(\{\theta^{(2)}, \theta^{(4)}, \theta^{(6)}, \dots, \theta^{(16000)}\}\)</span>. Oppure, potremmo decidere di conservare ogni decimo valore: <span class="math notranslate nohighlight">\(\{\theta^{(10)}, \theta^{(20)}, \theta^{(30)}, \dots, \theta^{(16000)}\}\)</span>. Scartando i campioni intermedi, è possibile rimuovere le forti correlazioni che sono presenti nel caso di lag più piccoli.</p></li>
+</ul>
+</section>
+<section id="statistica-hat-r">
+<h2>Statistica <span class="math notranslate nohighlight">\(\hat{R}\)</span><a class="headerlink" href="#statistica-hat-r" title="Permalink to this headline">#</a></h2>
+<p>In precedenza abbiamo detto che non solo è necessario che ogni singola catena sia stazionaria, ma è anche necessario che le diverse catene siano coerenti tra loro. La statistica <span class="math notranslate nohighlight">\(\hat{R}\)</span> affronta questo problema calcolando il rapporto tra la varianza tra le catene markoviane e la varianza entro le catene. In una situazione ottimale <span class="math notranslate nohighlight">\(\hat{R} = 1\)</span>; se <span class="math notranslate nohighlight">\(\hat{R}\)</span> è lontano da 1 questo vuol dire che non è ancora stata raggiunta la convergenza.</p>
+<p><strong>Interpretazione:</strong>  in maniera euristica possiamo dire che, se <span class="math notranslate nohighlight">\(\hat{R}\)</span> supera la soglia di 1.05, questo viene interpretato come evidenza che le diverse catene parallele non producono approssimazioni coerenti della distribuzione a posteriori: la simulazione è instabile.</p>
+</section>
+<section id="diagnostica-di-convergenza-di-geweke">
+<h2>Diagnostica di convergenza di Geweke<a class="headerlink" href="#diagnostica-di-convergenza-di-geweke" title="Permalink to this headline">#</a></h2>
+<p>La statistica diagnostica di convergenza di Geweke è basata su un test per l’uguaglianza delle medie della prima e dell’ultima parte di una catena di Markov (di default il primo 10% e l’ultimo 50% della catena). Se i due campioni sono estratti dalla distribuzione stazionaria della catena, le due medie sono statisticamente uguali e la statistica di Geweke ha una distribuzione asintotica Normale standardizzata.</p>
+<p><strong>Interpretazione:</strong> la statistica di Geweke è uguale a zero quando le medie delle due porzioni della catena di Markov sono uguali; valori maggiori di <span class="math notranslate nohighlight">\(\mid 2 \mid\)</span> suggeriscono che la catena non ha ancora raggiunto una distribuzione stazionaria.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="040_beta_binomial.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Markov Chain Monte Carlo per l’inferenza bayesiana</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="050_normal_normal_mod.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Inferenza su una media</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Corrado Caudek<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
